@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS songs (
+  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  deleted_at DATETIME
+);
+
+CREATE INDEX idx_songs_deleted_at ON songs (deleted_at ASC);
+
+CREATE TRIGGER tg_songs_updated_at
+AFTER UPDATE
+ON songs FOR EACH ROW
+BEGIN
+  UPDATE songs SET updated_at = current_timestamp
+    WHERE id = old.id;
+END;
